@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
+            about(null);
             return true;
         }
 
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @param v
+     * @param button
      */
     public void click(ImageButton button) {
         int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
