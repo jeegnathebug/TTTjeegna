@@ -37,6 +37,9 @@ public class TicTacToe {
         restartGame();
     }
 
+    public boolean isPlayable(int position) {
+        return board[position] == 0;
+    }
     /**
      * Puts a marker on the given position as being played, and disallows that position from being played again
      *
@@ -44,7 +47,7 @@ public class TicTacToe {
      */
     public void play(int position) {
         // Only play if block is empty
-        if (board[position] == 0) {
+        if (isPlayable(position)) {
             // Set marker to 1 or 2 based on which player's turn it is
             if (isPlayer1Turn) {
                 board[position] = 1;

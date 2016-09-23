@@ -19,10 +19,14 @@ import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jeegnathebug.tttjeegna.business.GameMode;
 import com.jeegnathebug.tttjeegna.business.TicTacToe;
 
+/**
+ * 
+ */
 public class MainActivity extends AppCompatActivity {
 
     private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
@@ -36,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String COUNTER_PLAYER2_WINS = "counterPlayer2Wins";
     public static final String COUNTER_TIES = "counterTies";
 
-    /**
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Launches the about activity
      *
-     * @param v
+     * @param v The {@code View}
      */
     public void about(View v) {
         Intent intent = new Intent(this, AboutActivity.class);
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Changes the game mode
      *
-     * @param v
+     * @param v The {@code View}
      */
     public void changeGameMode(View v) {
         // Get current gamemode
@@ -160,65 +161,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @param button
+     * Plays the given button, if possible
+     * @param button The {@code Button} that was clicked
      */
     public void click(ImageButton button) {
 
+        // Get position of button in array
         int position = getPosition(button);
+        // Get player marker
         Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
 
-        // Play position and set marker
-        tictactoe.play(position);
-        button.setImageDrawable(marker);
+        // Play position if it has not yet been set
+        if (tictactoe.isPlayable(position)) {
+            // Play position and set marker
+            tictactoe.play(position);
+            button.setImageDrawable(marker);
 
-        // Set height of ImageButton
-        ViewGroup.LayoutParams params = button.getLayoutParams();
-        params.height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
-        params.width = 0;
-        button.setLayoutParams(params);
+            // Set height of ImageButton
+            ViewGroup.LayoutParams params = button.getLayoutParams();
+            params.height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
+            params.width = 0;
+            button.setLayoutParams(params);
 
-        // Check win
-        checkWin();
-    }
-
-    /**
-     * Gets the position of the given Button
-     *
-     * @param button  The button whose position is to be found
-     * @return The position of the given button
-     */
-    private int getPosition(ImageButton button) {
-        // Get TableLayout
-        TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
-        int position = 0;
-
-        // Goes through each TableRow looking for button
-        // As i increases, the index in the main array will increase by 3*i
-        for (int i = 0; i < table.getChildCount(); i++) {
-            TableRow row = (TableRow) table.getChildAt(i);
-            int j = row.indexOfChild(button);
-            if (j != -1) {
-                position += j + (3 * i);
-            }
+            // Check win
+            checkWin();
         }
-
-        return position;
-    }
-
-    private void checkWin() {
-        if (tictactoe.checkWin()) {
-            displayWin();
-        }
-    }
-
-    private void displayWin() {
-        Log.i("Player 1? " + tictactoe.getPlayer1Turn(), "Winner");
     }
 
     /**
      * Resets the scores
      *
-     * @param v
+     * @param v The {@code View}
      */
     public void resetScores(View v) {
         tictactoe.resetScores();
@@ -227,35 +200,43 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Restarts the game
      *
-     * @param v
+     * @param v The {@code View}
      */
     public void restartGame(View v) {
-        // TODO reset buttons
-        TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
-        for (int i = 0; i < table.getChildCount(); i++) {
-            TableRow row = (TableRow) table.getChildAt(i);
-            for (int j = 0; j < row.getChildCount(); j++) {
-                ((ImageButton) row.getChildAt(j)).setImageDrawable(null);
-            }
-        }
 
+        ImageButton[] buttons = getButtons();
+        for (int i = 0; i < buttons.length; i++) {
+            // Enable buttons
+            buttons[i].setEnabled(true);
+            // Reset button images
+            buttons[i].setImageDrawable(null);
+        }
         tictactoe.restartGame();
     }
 
     /**
      * Launches the score activity
      *
-     * @param v
+     * @param v The {@code View}
      */
     public void scores(View v) {
         Intent intent = new Intent(this, ScoreActivity.class);
 
-        // Add TicTacToe class to Scores
+        // Add TicTacToe class information to Scores
         intent.putExtra(COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
         intent.putExtra(COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
         intent.putExtra(COUNTER_TIES, tictactoe.getTies());
 
         startActivity(intent);
+    }
+
+    /**
+     * Checks if there's a winner. If there is no winner, the game continues on as normal
+     */
+    private void checkWin() {
+        if (tictactoe.checkWin()) {
+            displayWin();
+        }
     }
 
     /**
@@ -265,6 +246,63 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void displayWin() {
+        Log.i("Player 1? " + tictactoe.getPlayer1Turn(), "Winner");
+        Toast.makeText(this, "Winner", Toast.LENGTH_SHORT).show();
+
+        endGame();
+    }
+
+    /**
+     * Ends the game
+     */
+    private void endGame() {
+        ImageButton[] buttons = getButtons();
+        for (int i = 0; i < buttons.length; i++) {
+            // Disable buttons
+            buttons[i].setEnabled(false);
+        }
+    }
+
+    /**
+     * Gets all the {@code ImageButton} objects from the {@code GridLayout}
+     *
+     * @return An array of the {@code ImageButton}s
+     */
+    private ImageButton[] getButtons() {
+        ImageButton buttons[] = new ImageButton[9];
+
+        TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
+
+        for (int i = 0; i < table.getChildCount(); i++) {
+            TableRow row = (TableRow) table.getChildAt(i);
+            for (int j = 0; j < row.getChildCount(); j++) {
+                buttons[j + (3 * i)] = (ImageButton) row.getChildAt(j);
+            }
+        }
+
+        return buttons;
+    }
+
+    /**
+     * Gets the position of the given Button
+     *
+     * @param button The button whose position is to be found
+     * @return The position of the given button
+     */
+    private int getPosition(ImageButton button) {
+        ImageButton[] buttons = getButtons();
+        for (int i = 0; i < buttons.length; i++) {
+            if (buttons[i].equals(button)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Adds event listeners to the button grid
+     */
     private void setButtons() {
         final ImageButton button1 = (ImageButton) findViewById(R.id.imageButton1);
         final ImageButton button2 = (ImageButton) findViewById(R.id.imageButton2);
@@ -276,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton button8 = (ImageButton) findViewById(R.id.imageButton8);
         final ImageButton button9 = (ImageButton) findViewById(R.id.imageButton9);
 
+        // Add events
         button1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 click(button1);
