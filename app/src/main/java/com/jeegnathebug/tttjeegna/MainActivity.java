@@ -1,5 +1,6 @@
 package com.jeegnathebug.tttjeegna;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,9 +14,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.util.Log;
 
 import com.jeegnathebug.tttjeegna.business.GameMode;
 import com.jeegnathebug.tttjeegna.business.TicTacToe;
@@ -160,25 +163,56 @@ public class MainActivity extends AppCompatActivity {
      * @param button
      */
     public void click(ImageButton button) {
-        int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
 
-        if (tictactoe.getPlayer1Turn()) {
-            tictactoe.play(0);
-            button.setImageDrawable(getDrawable(R.drawable.x));
+        int position = getPosition(button);
+        Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
 
-            ViewGroup.LayoutParams params = button.getLayoutParams();
-            params.height = height;
-            params.width = 0;
-            button.setLayoutParams(params);
-        } else {
-            tictactoe.play(0);
-            button.setImageDrawable(getDrawable(R.drawable.o));
+        // Play position and set marker
+        tictactoe.play(position);
+        button.setImageDrawable(marker);
 
-            ViewGroup.LayoutParams params = button.getLayoutParams();
-            params.height = height;
-            params.width = 0;
-            button.setLayoutParams(params);
+        // Set height of ImageButton
+        ViewGroup.LayoutParams params = button.getLayoutParams();
+        params.height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
+        params.width = 0;
+        button.setLayoutParams(params);
+
+        // Check win
+        checkWin();
+    }
+
+    /**
+     * Gets the position of the given Button
+     *
+     * @param button  The button whose position is to be found
+     * @return The position of the given button
+     */
+    private int getPosition(ImageButton button) {
+        // Get TableLayout
+        TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
+        int position = 0;
+
+        // Goes through each TableRow looking for button
+        // As i increases, the index in the main array will increase by 3*i
+        for (int i = 0; i < table.getChildCount(); i++) {
+            TableRow row = (TableRow) table.getChildAt(i);
+            int j = row.indexOfChild(button);
+            if (j != -1) {
+                position += j + (3 * i);
+            }
         }
+
+        return position;
+    }
+
+    private void checkWin() {
+        if (tictactoe.checkWin()) {
+            displayWin();
+        }
+    }
+
+    private void displayWin() {
+        Log.i("Player 1? " + tictactoe.getPlayer1Turn(), "Winner");
     }
 
     /**
@@ -197,6 +231,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void restartGame(View v) {
         // TODO reset buttons
+        TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
+        for (int i = 0; i < table.getChildCount(); i++) {
+            TableRow row = (TableRow) table.getChildAt(i);
+            for (int j = 0; j < row.getChildCount(); j++) {
+                ((ImageButton) row.getChildAt(j)).setImageDrawable(null);
+            }
+        }
+
         tictactoe.restartGame();
     }
 

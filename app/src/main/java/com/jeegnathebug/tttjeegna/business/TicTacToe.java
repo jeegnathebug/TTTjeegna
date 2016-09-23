@@ -1,5 +1,7 @@
 package com.jeegnathebug.tttjeegna.business;
 
+import android.util.Log;
+
 /**
  * Created by jeegna on 19/09/16.
  */
@@ -52,7 +54,6 @@ public class TicTacToe {
 
             // Check if current player won
             if (checkWin()) {
-                displayWin();
                 endGame();
             } else {
                 // Change turn
@@ -67,6 +68,7 @@ public class TicTacToe {
     public void restartGame() {
         // Create board
         setBoard(new int[boardSize]);
+        isPlayer1Turn = true;
     }
 
     /**
@@ -131,37 +133,47 @@ public class TicTacToe {
         }
     }
 
-    private boolean checkWin() {
+    /**
+     * Checks if the current player has won the game. If they have not, the game will continue on as normal
+     *
+     * @return {@code True} if the player won the game, {@code False} otherwise.
+     */
+    public boolean checkWin() {
+        // Current players marker
+        int playerMarker = isPlayer1Turn ? 1 : 2;
+
         // Winning format positions in array
-        int[] win1 = {0, 1, 2
-        };
-        int[] win2 = {
-                3, 4, 5
-        };
-        int[] win3 = {
-                6, 7, 8
-        };
-        int[] win4 = {
-                0, 3, 6
-        };
-        int[] win5 = {
-                1, 4, 7
-        };
-        int[] win6 = {
-                2, 5, 8
-        };
-        int[] win7 = {
-                0, 4, 8
-        };
-        int[] win8 = {
-                2, 4, 6
-        };
+        int[] win1 = {0, 1, 2};
+        int[] win2 = {3, 4, 5};
+        int[] win3 = {6, 7, 8};
+        int[] win4 = {0, 3, 6};
+        int[] win5 = {1, 4, 7};
+        int[] win6 = {2, 5, 8};
+        int[] win7 = {0, 4, 8};
+        int[] win8 = {2, 4, 6};
+
+        int[][] allWins = {win1, win2, win3, win4, win5, win6, win7, win8};
+
+        int counter = 0;
+
+        for (int i = 0; i < allWins.length; i++) {
+            for (int j = 0; j < allWins[i].length; j++) {
+                if (board[allWins[i][j]] == playerMarker) {
+                    counter++;
+                    // They have three in a row, so they win
+                    if (counter == 3) {
+                        return true;
+                    }
+                } else {
+                    // Reset counter
+                    counter = 0;
+                }
+            }
+            // Reset counter
+            counter = 0;
+        }
 
         return false;
-    }
-
-    private void displayWin() {
-        // TODO
     }
 
     private void endGame() {
