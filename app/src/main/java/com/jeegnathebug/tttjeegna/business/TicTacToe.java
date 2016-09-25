@@ -5,7 +5,7 @@ import android.util.Log;
 import java.io.Serializable;
 
 /**
- * Created by jeegna on 19/09/16.
+ * Created by jeegnathebug on 19/09/16.
  */
 public class TicTacToe implements Serializable {
 
@@ -34,44 +34,54 @@ public class TicTacToe implements Serializable {
     }
 
     /**
-     * Checks whether the position has already been played or not
-     *
-     * @param position The position to check
-     * @return {@code True} if the position has not yet been played, {@code False} otherwise.
+     * Changes the turn
      */
-    public boolean isPlayable(int position) {
-        return board[position] == 0;
+    public void changeTurn() {
+        isPlayer1Turn = !isPlayer1Turn;
     }
 
     /**
-     * Puts a marker on the given position as being played, and disallows that position from being played again
+     * Checks if the current player has won the game
      *
-     * @param position The position on the tictactoe grid to be played
+     * @return {@code True} if the player won the game, {@code False} otherwise.
      */
-    public void play(int position) {
-        // Only play if block is empty
-        if (isPlayable(position)) {
-            // Set marker to 1 or 2 based on which player's turn it is
-            board[position] = isPlayer1Turn ? 1 : 2;
+    public boolean checkWin() {
+        // Get player marker
+        int playerMarker = isPlayer1Turn ? 1 : 2;
+
+        // Winning format positions in array
+        int[] win1 = {0, 1, 2};
+        int[] win2 = {3, 4, 5};
+        int[] win3 = {6, 7, 8};
+        int[] win4 = {0, 3, 6};
+        int[] win5 = {1, 4, 7};
+        int[] win6 = {2, 5, 8};
+        int[] win7 = {0, 4, 8};
+        int[] win8 = {2, 4, 6};
+
+        int[][] allWins = {win1, win2, win3, win4, win5, win6, win7, win8};
+
+        int counter = 0;
+
+        for (int i = 0; i < allWins.length; i++) {
+            for (int j = 0; j < allWins[i].length; j++) {
+                // if board at win1[0], win1[1], ... is playerMarker
+                if (board[allWins[i][j]] == playerMarker) {
+                    counter++;
+                    // They have three in a row, so they win
+                    if (counter == 3) {
+                        return true;
+                    }
+                } else {
+                    // Reset counter
+                    counter = 0;
+                }
+            }
+            // Reset counter
+            counter = 0;
         }
-    }
 
-    /**
-     * Resets the game
-     */
-    public void restartGame() {
-        // Create new board
-        setBoard(new int[boardSize]);
-        isPlayer1Turn = true;
-    }
-
-    /**
-     * Resets the scores
-     */
-    public void resetScores() {
-        setPlayer1Score(0);
-        setPlayer2Score(0);
-        setTies(0);
+        return false;
     }
 
     /**
@@ -129,6 +139,47 @@ public class TicTacToe implements Serializable {
     }
 
     /**
+     * Checks whether the position has already been played or not
+     *
+     * @param position The position to check
+     * @return {@code True} if the position has not yet been played, {@code False} otherwise.
+     */
+    public boolean isPlayable(int position) {
+        return board[position] == 0;
+    }
+
+    /**
+     * Puts a marker on the given position as being played, and disallows that position from being played again
+     *
+     * @param position The position on the tictactoe grid to be played
+     */
+    public void play(int position) {
+        // Only play if block is empty
+        if (isPlayable(position)) {
+            // Set marker to 1 or 2 based on which player's turn it is
+            board[position] = isPlayer1Turn ? 1 : 2;
+        }
+    }
+
+    /**
+     * Resets the scores
+     */
+    public void resetScores() {
+        setPlayer1Score(0);
+        setPlayer2Score(0);
+        setTies(0);
+    }
+
+    /**
+     * Resets the game
+     */
+    public void restartGame() {
+        // Create new board
+        setBoard(new int[boardSize]);
+        isPlayer1Turn = true;
+    }
+
+    /**
      * Sets the board
      *
      * @param board The new board
@@ -171,57 +222,6 @@ public class TicTacToe implements Serializable {
      */
     public void setTies(int ties) {
         this.ties = ties;
-    }
-
-    /**
-     * Changes the turn
-     */
-    public void changeTurn() {
-        isPlayer1Turn = !isPlayer1Turn;
-    }
-
-    /**
-     * Checks if the current player has won the game
-     *
-     * @return {@code True} if the player won the game, {@code False} otherwise.
-     */
-    public boolean checkWin() {
-        // Get player marker
-        int playerMarker = isPlayer1Turn ? 1 : 2;
-
-        // Winning format positions in array
-        int[] win1 = {0, 1, 2};
-        int[] win2 = {3, 4, 5};
-        int[] win3 = {6, 7, 8};
-        int[] win4 = {0, 3, 6};
-        int[] win5 = {1, 4, 7};
-        int[] win6 = {2, 5, 8};
-        int[] win7 = {0, 4, 8};
-        int[] win8 = {2, 4, 6};
-
-        int[][] allWins = {win1, win2, win3, win4, win5, win6, win7, win8};
-
-        int counter = 0;
-
-        for (int i = 0; i < allWins.length; i++) {
-            for (int j = 0; j < allWins[i].length; j++) {
-                // if board at win1[0], win1[1], ... is playerMarker
-                if (board[allWins[i][j]] == playerMarker) {
-                    counter++;
-                    // They have three in a row, so they win
-                    if (counter == 3) {
-                        return true;
-                    }
-                } else {
-                    // Reset counter
-                    counter = 0;
-                }
-            }
-            // Reset counter
-            counter = 0;
-        }
-
-        return false;
     }
 
     /**
