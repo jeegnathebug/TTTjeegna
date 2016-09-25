@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 /**
  * Created by jeegnathebug on 19/09/16.
+ *
+ * A {@code TicTacToe} game. This class contains all the state information about an instance of the game
  */
 public class TicTacToe implements Serializable {
 
@@ -17,9 +19,9 @@ public class TicTacToe implements Serializable {
     private boolean isPlayer1Turn;
     private GameMode gameMode;
 
-    private int player1Score = 0;
-    private int player2Score = 0;
-    private int ties = 0;
+    private int player1Score;
+    private int player2Score;
+    private int ties;
 
     /**
      * Contructs a new TicTacToe game with the given game mode
@@ -213,6 +215,15 @@ public class TicTacToe implements Serializable {
      */
     public void setPlayer2Score(int score) {
         player2Score = score;
+    }
+
+    /**
+     * Sets player 1's turn
+     *
+     * @param isPlayer1Turn {@code True} if it is player 1's turn, {@code False} otherwise.
+     */
+    public void setPlayer1Turn(boolean isPlayer1Turn) {
+        this.isPlayer1Turn = isPlayer1Turn;
     }
 
     /**

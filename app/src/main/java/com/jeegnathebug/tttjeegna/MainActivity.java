@@ -1,11 +1,13 @@
 package com.jeegnathebug.tttjeegna;
 
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -13,22 +15,24 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.jeegnathebug.tttjeegna.business.GameMode;
 import com.jeegnathebug.tttjeegna.business.TicTacToe;
 
+import java.util.Random;
+
 /**
- *
+ * The main class
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
 
     static final String PREFS_NAME = "Preferences";
 
+    private static final String PLAYER1_TURN = "player1Turn";
     private static final String GAME_MODE = "gameMode";
     private static final String GAME_BOARD = "gameBoard";
 
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setActionBar(toolbar);
 
         // Set button events
         setButtons();
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
             about(null);
             return true;
@@ -88,19 +91,35 @@ public class MainActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
+        // Set turn
+        tictactoe.setPlayer1Turn(savedInstanceState.getBoolean(PLAYER1_TURN));
         // Set gamemode
         tictactoe.setGameMode(GameMode.fromInt(savedInstanceState.getInt(GAME_MODE)));
-        // Set board
+
+        // Get board
         int[] board = savedInstanceState.getIntArray(GAME_BOARD);
+        // Set board
+        tictactoe.setBoard(board);
+
+        // Set markers on board
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
-
+            Drawable marker = null;
+            if (board[i] == 1) {
+                marker = getDrawable(R.drawable.x);
+                moveCounter++;
+            } else if (board[i] == 2) {
+                marker = getDrawable(R.drawable.o);
+                moveCounter++;
+            }
+            buttons[i].setImageDrawable(marker);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save state information
+        savedInstanceState.putBoolean(PLAYER1_TURN, tictactoe.getPlayer1Turn());
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
 
@@ -157,14 +176,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Plays the given button, if possible
+     *
      * @param button The {@code Button} that was clicked
      */
     public void click(ImageButton button) {
 
+        // FIXME on rotate
         // Just an aesthetics thing. The buttons change height if this isn't done
-        if (moveCounter == 0) {
-            setHeights();
-        }
+        setHeights();
 
         // Get position of button in array
         int position = getPosition(button);
@@ -172,11 +191,22 @@ public class MainActivity extends AppCompatActivity {
         // Play position if it has not yet been set
         if (tictactoe.isPlayable(position)) {
 
-            play(position, button);
+            // Add move
+            moveCounter++;
 
-            // Check win
+            // Play position
+            tictactoe.play(position);
+
+            // Get player marker
+            Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
+            // Set marker
+            button.setImageDrawable(marker);
+
+            // Check win or change turn
             if (tictactoe.checkWin()) {
-                displayWin(tictactoe.getPlayer1Turn() ? 1 : 2);
+                int winner = tictactoe.getPlayer1Turn() ? 1 : 2;
+                displayWin(winner);
+                endGame(winner);
             } else {
                 tictactoe.changeTurn();
             }
@@ -186,21 +216,17 @@ public class MainActivity extends AppCompatActivity {
                 displayWin(0);
                 endGame(0);
             }
+
+            // Computer turn
+            if (!tictactoe.getPlayer1Turn() && tictactoe.getGameMode().equals(GameMode.PvE)) {
+                click(computerChoice());
+            }
         }
     }
 
-    private void play(int position, ImageButton button) {
-        // Add move
-        moveCounter++;
-
-        // Get player marker
-        Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
-
-        // Play position and set marker
-        tictactoe.play(position);
-        button.setImageDrawable(marker);
-    }
-
+    /**
+     * FIXME
+     */
     private void setHeights() {
         ImageButton[] buttons = getButtons();
         int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
@@ -246,12 +272,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Chooses a move for the computer and plays it
      */
-    private void computerChoice() {
+    private ImageButton computerChoice() {
+        int[] board = tictactoe.getBoard();
+        Random random = new Random();
+        int choice;
 
+        do {
+            choice = random.nextInt(9);
+        } while (!tictactoe.isPlayable(choice));
+
+        Log.i("Comp choice", choice + "");
+        // Pretend computer clicked the button
+        // Kind of counter-productive so FIXME
+        return getButtons()[choice];
     }
 
+    /**
+     * Displays a {@code Toast} with an appropriate message
+     *
+     * @param winner The winner of the game, where 0 = tie game, 1 = player 1, and 2 = player 2.
+     */
     private void displayWin(int winner) {
         String message = "";
         switch (winner) {
@@ -265,14 +307,13 @@ public class MainActivity extends AppCompatActivity {
                 message = "Tie game!";
                 break;
         }
+
         // Display toast
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-        endGame(winner);
     }
 
     /**
-     * Ends the game
+     * Ends the game, and updates the score
      */
     private void endGame(int winner) {
         ImageButton[] buttons = getButtons();
@@ -292,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton[] getButtons() {
         ImageButton buttons[] = new ImageButton[9];
 
+        // Get layout
         TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
 
         for (int i = 0; i < table.getChildCount(); i++) {
