@@ -2,10 +2,14 @@ package com.jeegnathebug.tttjeegna.business;
 
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Created by jeegna on 19/09/16.
  */
-public class TicTacToe {
+public class TicTacToe implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int boardSize = 9;
     private int[] board;
@@ -13,9 +17,9 @@ public class TicTacToe {
     private boolean isPlayer1Turn;
     private GameMode gameMode;
 
-    private int player1Score;
-    private int player2Score;
-    private int ties;
+    private int player1Score = 0;
+    private int player2Score = 0;
+    private int ties = 0;
 
     /**
      * Contructs a new TicTacToe game with the given game mode
@@ -26,20 +30,19 @@ public class TicTacToe {
         isPlayer1Turn = true;
         setGameMode(gameMode);
 
-        // Start a new game
-        newGame();
-    }
-
-    /**
-     * Resets the board and starts a new game
-     */
-    public void newGame() {
         restartGame();
     }
 
+    /**
+     * Checks whether the position has already been played or not
+     *
+     * @param position The position to check
+     * @return {@code True} if the position has not yet been played, {@code False} otherwise.
+     */
     public boolean isPlayable(int position) {
         return board[position] == 0;
     }
+
     /**
      * Puts a marker on the given position as being played, and disallows that position from being played again
      *
@@ -49,27 +52,15 @@ public class TicTacToe {
         // Only play if block is empty
         if (isPlayable(position)) {
             // Set marker to 1 or 2 based on which player's turn it is
-            if (isPlayer1Turn) {
-                board[position] = 1;
-            } else {
-                board[position] = 2;
-            }
-
-            // Check if current player won
-            if (checkWin()) {
-                endGame();
-            } else {
-                // Change turn
-                changeTurn();
-            }
+            board[position] = isPlayer1Turn ? 1 : 2;
         }
     }
 
     /**
-     * Resets the boards and restarts the game
+     * Resets the game
      */
     public void restartGame() {
-        // Create board
+        // Create new board
         setBoard(new int[boardSize]);
         isPlayer1Turn = true;
     }
@@ -83,66 +74,119 @@ public class TicTacToe {
         setTies(0);
     }
 
+    /**
+     * Gets the board array as an int array. The values range from 0 - 2 inclusive, where 0 means the position has not been played, 1 means player 1 has played there, and 2 means player 2 has played there
+     *
+     * @return The board
+     */
     public int[] getBoard() {
         return board;
     }
 
+    /**
+     * Gets the GameMode
+     *
+     * @return the GameMode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }
 
+    /**
+     * Gets player 1's score
+     *
+     * @return Player 1's score
+     */
     public int getPlayer1Score() {
         return player1Score;
     }
 
+    /**
+     * Gets player 2's score
+     *
+     * @return Player 2's score
+     */
     public int getPlayer2Score() {
         return player2Score;
     }
 
+    /**
+     * Gets player 1's turn
+     *
+     * @return {@code True} if it is Player 1's turn, {@code False} otherwise.
+     */
     public boolean getPlayer1Turn() {
         return isPlayer1Turn;
     }
 
+    /**
+     * Gets the tie counter
+     *
+     * @return The tie counter
+     */
     public int getTies() {
         return ties;
     }
 
+    /**
+     * Sets the board
+     *
+     * @param board The new board
+     */
     public void setBoard(int[] board) {
         this.board = board;
     }
 
+    /**
+     * Sets the GameMode
+     *
+     * @param gameMode The new GameMode
+     */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
     }
 
+    /**
+     * Sets player 1's score
+     *
+     * @param score Player 1's new score
+     */
     public void setPlayer1Score(int score) {
         player1Score = score;
     }
 
+    /**
+     * Sets player 2's score
+     *
+     * @param score Player 2's new score
+     */
     public void setPlayer2Score(int score) {
         player2Score = score;
     }
 
+    /**
+     * Sets the tie counter
+     *
+     * @param ties The new tie counter
+     */
     public void setTies(int ties) {
         this.ties = ties;
     }
 
-    private void changeTurn() {
-        // Change turn
-        if (isPlayer1Turn) {
-            isPlayer1Turn = false;
-        } else {
-            isPlayer1Turn = true;
-        }
+    /**
+     * Changes the turn
+     */
+    public void changeTurn() {
+        isPlayer1Turn = !isPlayer1Turn;
     }
 
     /**
-     * Checks if the current player has won the game. If they have not, the game will continue on as normal
+     * Checks if the current player has won the game
      *
      * @return {@code True} if the player won the game, {@code False} otherwise.
      */
     public boolean checkWin() {
-        // Current players marker
+        // Get player marker
         int playerMarker = isPlayer1Turn ? 1 : 2;
 
         // Winning format positions in array
@@ -161,6 +205,7 @@ public class TicTacToe {
 
         for (int i = 0; i < allWins.length; i++) {
             for (int j = 0; j < allWins[i].length; j++) {
+                // if board at win1[0], win1[1], ... is playerMarker
                 if (board[allWins[i][j]] == playerMarker) {
                     counter++;
                     // They have three in a row, so they win
@@ -179,7 +224,23 @@ public class TicTacToe {
         return false;
     }
 
-    private void endGame() {
-        // TODO
+    /**
+     * Updates the score of the given winner
+     *
+     * @param winner The player who won, where 0 = tie, 1 = player 1, and 2 = player 2.
+     */
+    public void updateScore(int winner) {
+        // Update score
+        switch (winner) {
+            case 0:
+                ties++;
+                break;
+            case 1:
+                player1Score++;
+                break;
+            case 2:
+                player2Score++;
+                break;
+        }
     }
 }

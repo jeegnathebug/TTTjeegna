@@ -34,4 +34,11 @@
         android:textSize="16sp"
         android:padding="5dp"
         android:id="@+id/textViewScoreTies" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_reset_scores"
+        android:id="@+id/buttonResetScore"
+        android:onClick="resetScores" />
 </LinearLayout>

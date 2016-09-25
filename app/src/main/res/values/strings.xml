@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Tic Tac Toe</string>
     <string name="button_restart">Restart</string>
-    <string name="button_versus">VS</string>
-    <string name="button_reset_scores">Zero</string>
+    <string name="button_versus">Change Game Mode</string>
+    <string name="button_reset_scores">Reset Score</string>
     <string name="button_scores">Scores</string>
     <string name="button_about">About</string>
 

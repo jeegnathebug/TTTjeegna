@@ -2,11 +2,8 @@ package com.jeegnathebug.tttjeegna;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,27 +15,29 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.jeegnathebug.tttjeegna.business.GameMode;
 import com.jeegnathebug.tttjeegna.business.TicTacToe;
 
 /**
- * 
+ *
  */
 public class MainActivity extends AppCompatActivity {
 
     private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
 
-    private static final String PREFS_NAME = "Preferences";
+    static final String PREFS_NAME = "Preferences";
 
     private static final String GAME_MODE = "gameMode";
     private static final String GAME_BOARD = "gameBoard";
 
+    public static final String TIC_TAC_TOE = "tictactoe";
     public static final String COUNTER_PLAYER1_WINS = "counterPlayer1Wins";
     public static final String COUNTER_PLAYER2_WINS = "counterPlayer2Wins";
     public static final String COUNTER_TIES = "counterTies";
+
+    private int moveCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             // Restore value of members from saved state
             onRestoreInstanceState(savedInstanceState);
         } else {
-            // Get shared preferences
+            // Get scores from shared preferences
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
             tictactoe.setPlayer1Score(settings.getInt(COUNTER_PLAYER1_WINS, 0));
             tictactoe.setPlayer2Score(settings.getInt(COUNTER_PLAYER2_WINS, 0));
@@ -75,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -90,22 +86,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
-        tictactoe.setPlayer1Score(savedInstanceState.getInt(COUNTER_PLAYER1_WINS));
-        tictactoe.setPlayer2Score(savedInstanceState.getInt(COUNTER_PLAYER2_WINS));
-        tictactoe.setTies(savedInstanceState.getInt(COUNTER_TIES));
+        // Set gamemode
         tictactoe.setGameMode(GameMode.fromInt(savedInstanceState.getInt(GAME_MODE)));
-        tictactoe.setBoard(savedInstanceState.getIntArray(GAME_BOARD));
+        // Set board
+        int[] board = savedInstanceState.getIntArray(GAME_BOARD);
+        ImageButton[] buttons = getButtons();
+        for (int i = 0; i < board.length; i++) {
+
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // save state information with a collection of key-value pairs
-        savedInstanceState.putInt(COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
-        savedInstanceState.putInt(COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
-        savedInstanceState.putInt(COUNTER_TIES, tictactoe.getTies());
+        // Save state information
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
 
@@ -166,35 +161,56 @@ public class MainActivity extends AppCompatActivity {
      */
     public void click(ImageButton button) {
 
+        // Just an aesthetics thing. The buttons change height if this isn't done
+        if (moveCounter == 0) {
+            setHeights();
+        }
+
         // Get position of button in array
         int position = getPosition(button);
-        // Get player marker
-        Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
 
         // Play position if it has not yet been set
         if (tictactoe.isPlayable(position)) {
-            // Play position and set marker
-            tictactoe.play(position);
-            button.setImageDrawable(marker);
 
-            // Set height of ImageButton
-            ViewGroup.LayoutParams params = button.getLayoutParams();
-            params.height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
-            params.width = 0;
-            button.setLayoutParams(params);
+            play(position, button);
 
             // Check win
-            checkWin();
+            if (tictactoe.checkWin()) {
+                displayWin(tictactoe.getPlayer1Turn() ? 1 : 2);
+            } else {
+                tictactoe.changeTurn();
+            }
+
+            // Tie game
+            if (moveCounter == 9) {
+                displayWin(0);
+                endGame(0);
+            }
         }
     }
 
-    /**
-     * Resets the scores
-     *
-     * @param v The {@code View}
-     */
-    public void resetScores(View v) {
-        tictactoe.resetScores();
+    private void play(int position, ImageButton button) {
+        // Add move
+        moveCounter++;
+
+        // Get player marker
+        Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
+
+        // Play position and set marker
+        tictactoe.play(position);
+        button.setImageDrawable(marker);
+    }
+
+    private void setHeights() {
+        ImageButton[] buttons = getButtons();
+        int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
+
+        for (ImageButton button : buttons) {
+            ViewGroup.LayoutParams params = button.getLayoutParams();
+            params.height = height;
+            params.width = 0;
+            button.setLayoutParams(params);
+        }
     }
 
     /**
@@ -203,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
      * @param v The {@code View}
      */
     public void restartGame(View v) {
-
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < buttons.length; i++) {
             // Enable buttons
@@ -211,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
             // Reset button images
             buttons[i].setImageDrawable(null);
         }
+
+        moveCounter = 0;
         tictactoe.restartGame();
     }
 
@@ -222,21 +239,10 @@ public class MainActivity extends AppCompatActivity {
     public void scores(View v) {
         Intent intent = new Intent(this, ScoreActivity.class);
 
-        // Add TicTacToe class information to Scores
-        intent.putExtra(COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
-        intent.putExtra(COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
-        intent.putExtra(COUNTER_TIES, tictactoe.getTies());
+        // Add TicTacToe class to Scores
+        intent.putExtra(TIC_TAC_TOE, tictactoe);
 
         startActivity(intent);
-    }
-
-    /**
-     * Checks if there's a winner. If there is no winner, the game continues on as normal
-     */
-    private void checkWin() {
-        if (tictactoe.checkWin()) {
-            displayWin();
-        }
     }
 
     /**
@@ -246,22 +252,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void displayWin() {
-        Log.i("Player 1? " + tictactoe.getPlayer1Turn(), "Winner");
-        Toast.makeText(this, "Winner", Toast.LENGTH_SHORT).show();
+    private void displayWin(int winner) {
+        String message = "";
+        switch (winner) {
+            case 0:
+                message = "Player 1 winner!";
+                break;
+            case 1:
+                message = "Player 2 winner!";
+                break;
+            case 2:
+                message = "Tie game!";
+                break;
+        }
+        // Display toast
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
-        endGame();
+        endGame(winner);
     }
 
     /**
      * Ends the game
      */
-    private void endGame() {
+    private void endGame(int winner) {
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < buttons.length; i++) {
             // Disable buttons
             buttons[i].setEnabled(false);
         }
+
+        tictactoe.updateScore(winner);
     }
 
     /**
