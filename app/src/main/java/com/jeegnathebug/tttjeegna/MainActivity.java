@@ -99,7 +99,9 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         // Set turn
@@ -133,6 +135,7 @@ public class MainActivity extends Activity {
 
             // Set image
             buttons[i].setImageDrawable(marker);
+
         }
     }
 
@@ -248,7 +251,16 @@ public class MainActivity extends Activity {
         // Add TicTacToe class to Scores
         intent.putExtra(TIC_TAC_TOE, tictactoe);
 
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                tictactoe = (TicTacToe) data.getExtras().getSerializable(ScoreActivity.SCORE);
+                break;
+        }
     }
 
     /**

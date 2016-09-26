@@ -15,6 +15,7 @@ import com.jeegnathebug.tttjeegna.business.TicTacToe;
 public class ScoreActivity extends Activity {
 
     private TicTacToe tictactoe;
+    public static final String SCORE = "com.jeegnathebug.scoreActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +62,12 @@ public class ScoreActivity extends Activity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void finish() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(SCORE, tictactoe);
+        setResult(RESULT_OK, intent);
 
-        // Set shared preferences
-        SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-
-        editor.putInt(MainActivity.COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
-        editor.putInt(MainActivity.COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
-        editor.putInt(MainActivity.COUNTER_COMPUTER_WINS, tictactoe.getComputerScore());
-        editor.putInt(MainActivity.COUNTER_TIES, tictactoe.getTies());
-
-        editor.apply();
+        super.finish();
     }
 
     /**
