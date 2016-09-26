@@ -2,12 +2,15 @@ package com.jeegnathebug.tttjeegna.business;
 
 import android.util.Log;
 
+import com.jeegnathebug.tttjeegna.R;
+
 import java.io.Serializable;
 
 /**
  * Created by jeegnathebug on 19/09/16.
  *
- * A {@code TicTacToe} game. This class contains all the state information about an instance of the game
+ * A {@code TicTacToe} game. This class contains all the state information about
+ * an instance of the game.
  */
 public class TicTacToe implements Serializable {
 
@@ -21,18 +24,31 @@ public class TicTacToe implements Serializable {
 
     private int player1Score;
     private int player2Score;
+    private int computerScore;
     private int ties;
 
     /**
      * Contructs a new TicTacToe game with the given game mode
      *
-     * @param gameMode The type of game that should be played
+     * @param gameMode
+     *            The type of game that should be played
      */
     public TicTacToe(GameMode gameMode) {
         isPlayer1Turn = true;
         setGameMode(gameMode);
 
         restartGame();
+    }
+
+    /**
+     * Changes the game mode
+     */
+    public void changeGameMode() {
+        if (gameMode.equals(GameMode.PvE)) {
+            gameMode = GameMode.PvP;
+        } else {
+            gameMode = GameMode.PvE;
+        }
     }
 
     /**
@@ -52,16 +68,16 @@ public class TicTacToe implements Serializable {
         int playerMarker = isPlayer1Turn ? 1 : 2;
 
         // Winning format positions in array
-        int[] win1 = {0, 1, 2};
-        int[] win2 = {3, 4, 5};
-        int[] win3 = {6, 7, 8};
-        int[] win4 = {0, 3, 6};
-        int[] win5 = {1, 4, 7};
-        int[] win6 = {2, 5, 8};
-        int[] win7 = {0, 4, 8};
-        int[] win8 = {2, 4, 6};
+        int[] win1 = { 0, 1, 2 };
+        int[] win2 = { 3, 4, 5 };
+        int[] win3 = { 6, 7, 8 };
+        int[] win4 = { 0, 3, 6 };
+        int[] win5 = { 1, 4, 7 };
+        int[] win6 = { 2, 5, 8 };
+        int[] win7 = { 0, 4, 8 };
+        int[] win8 = { 2, 4, 6 };
 
-        int[][] allWins = {win1, win2, win3, win4, win5, win6, win7, win8};
+        int[][] allWins = { win1, win2, win3, win4, win5, win6, win7, win8 };
 
         int counter = 0;
 
@@ -82,12 +98,13 @@ public class TicTacToe implements Serializable {
             // Reset counter
             counter = 0;
         }
-
         return false;
     }
 
     /**
-     * Gets the board array as an int array. The values range from 0 - 2 inclusive, where 0 means the position has not been played, 1 means player 1 has played there, and 2 means player 2 has played there
+     * Gets the board array as an int array. The values range from 0 - 2
+     * inclusive, where 0 means the position has not been played, 1 means player
+     * 1 has played there, and 2 means player 2 has played there
      *
      * @return The board
      */
@@ -105,6 +122,14 @@ public class TicTacToe implements Serializable {
     }
 
     /**
+     * Gets computer's score
+     * @return The computer's score
+     */
+    public int getComputerScore() {
+        return computerScore;
+    }
+
+    /**
      * Gets player 1's score
      *
      * @return Player 1's score
@@ -114,21 +139,21 @@ public class TicTacToe implements Serializable {
     }
 
     /**
-     * Gets player 2's score
-     *
-     * @return Player 2's score
-     */
-    public int getPlayer2Score() {
-        return player2Score;
-    }
-
-    /**
      * Gets player 1's turn
      *
      * @return {@code True} if it is Player 1's turn, {@code False} otherwise.
      */
     public boolean getPlayer1Turn() {
         return isPlayer1Turn;
+    }
+
+    /**
+     * Gets player 2's score
+     *
+     * @return Player 2's score
+     */
+    public int getPlayer2Score() {
+        return player2Score;
     }
 
     /**
@@ -143,17 +168,21 @@ public class TicTacToe implements Serializable {
     /**
      * Checks whether the position has already been played or not
      *
-     * @param position The position to check
-     * @return {@code True} if the position has not yet been played, {@code False} otherwise.
+     * @param position
+     *            The position to check
+     * @return {@code True} if the position has not yet been played,
+     *         {@code False} otherwise.
      */
     public boolean isPlayable(int position) {
         return board[position] == 0;
     }
 
     /**
-     * Puts a marker on the given position as being played, and disallows that position from being played again
+     * Puts a marker on the given position as being played, and disallows that
+     * position from being played again
      *
-     * @param position The position on the tictactoe grid to be played
+     * @param position
+     *            The position on the tictactoe grid to be played
      */
     public void play(int position) {
         // Only play if block is empty
@@ -169,6 +198,7 @@ public class TicTacToe implements Serializable {
     public void resetScores() {
         setPlayer1Score(0);
         setPlayer2Score(0);
+        setComputerScore(0);
         setTies(0);
     }
 
@@ -184,7 +214,8 @@ public class TicTacToe implements Serializable {
     /**
      * Sets the board
      *
-     * @param board The new board
+     * @param board
+     *            The new board
      */
     public void setBoard(int[] board) {
         this.board = board;
@@ -193,16 +224,28 @@ public class TicTacToe implements Serializable {
     /**
      * Sets the GameMode
      *
-     * @param gameMode The new GameMode
+     * @param gameMode
+     *            The new GameMode
      */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
     }
 
     /**
+     * Sets the computer's score
+     *
+     * @param score
+     *            The new score
+     */
+    public void setComputerScore(int score) {
+        computerScore = score;
+    }
+
+    /**
      * Sets player 1's score
      *
-     * @param score Player 1's new score
+     * @param score
+     *            Player 1's new score
      */
     public void setPlayer1Score(int score) {
         player1Score = score;
@@ -211,7 +254,8 @@ public class TicTacToe implements Serializable {
     /**
      * Sets player 2's score
      *
-     * @param score Player 2's new score
+     * @param score
+     *            Player 2's new score
      */
     public void setPlayer2Score(int score) {
         player2Score = score;
@@ -220,7 +264,9 @@ public class TicTacToe implements Serializable {
     /**
      * Sets player 1's turn
      *
-     * @param isPlayer1Turn {@code True} if it is player 1's turn, {@code False} otherwise.
+     * @param isPlayer1Turn
+     *            {@code True} if it is player 1's turn, {@code False}
+     *            otherwise.
      */
     public void setPlayer1Turn(boolean isPlayer1Turn) {
         this.isPlayer1Turn = isPlayer1Turn;
@@ -229,7 +275,8 @@ public class TicTacToe implements Serializable {
     /**
      * Sets the tie counter
      *
-     * @param ties The new tie counter
+     * @param ties
+     *            The new tie counter
      */
     public void setTies(int ties) {
         this.ties = ties;
@@ -238,7 +285,9 @@ public class TicTacToe implements Serializable {
     /**
      * Updates the score of the given winner
      *
-     * @param winner The player who won, where 0 = tie, 1 = player 1, and 2 = player 2.
+     * @param winner
+     *            The player who won, where 0 = tie, 1 = player 1, 2 =
+     *            player 2, and 3 = computer.
      */
     public void updateScore(int winner) {
         // Update score
@@ -251,6 +300,9 @@ public class TicTacToe implements Serializable {
                 break;
             case 2:
                 player2Score++;
+                break;
+            case 3:
+                computerScore++;
                 break;
         }
     }

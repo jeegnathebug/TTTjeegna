@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tic Tac Toe</string>
+    <string name="app_name">TTTjeegna</string>
     <string name="button_restart">Restart</string>
     <string name="button_versus">Change Game Mode</string>
     <string name="button_reset_scores">Reset Score</string>
@@ -9,13 +9,19 @@
     <string name="PvP">Player vs. Player</string>
     <string name="PvE">Player vs. Droid</string>
 
-    <string name="aboutTitle">About</string>
+    <string name="action_about">About</string>
     <string name="aboutText">Win the game by getting three of your markers (either x or o) in a row. The markers can be horizontal, vertical or diagonal.</string>
 
     <string name="scoreTitle">Scores</string>
     <string name="scorePlayer1">Player 1: %1$d</string>
     <string name="scorePlayer2">Player 2: %1$d</string>
+    <string name="scoreComputer">Computer: %1$d</string>
     <string name="scoreTies">Ties: %1$d</string>
 
-    <string name="action_about">About</string>
+    <string name="winPlayer1">Player 1 wins!</string>
+    <string name="winPlayer2">Player 2 wins!</string>
+    <string name="winComputer">Computer wins</string>
+    <string name="winTie">Tie game!</string>
+
+    <string name="button_OK">OK</string>
 </resources>

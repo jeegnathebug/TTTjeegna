@@ -1,6 +1,8 @@
 package com.jeegnathebug.tttjeegna;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -35,13 +37,16 @@ public class MainActivity extends Activity {
     private static final String PLAYER1_TURN = "player1Turn";
     private static final String GAME_MODE = "gameMode";
     private static final String GAME_BOARD = "gameBoard";
+    private static final String IS_END = "isEnd";
 
     public static final String TIC_TAC_TOE = "tictactoe";
     public static final String COUNTER_PLAYER1_WINS = "counterPlayer1Wins";
     public static final String COUNTER_PLAYER2_WINS = "counterPlayer2Wins";
+    public static final String COUNTER_COMPUTER_WINS = "counterComputerWins";
     public static final String COUNTER_TIES = "counterTies";
 
     private int moveCounter = 0;
+    private boolean isEnd = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +67,16 @@ public class MainActivity extends Activity {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
             tictactoe.setPlayer1Score(settings.getInt(COUNTER_PLAYER1_WINS, 0));
             tictactoe.setPlayer2Score(settings.getInt(COUNTER_PLAYER2_WINS, 0));
+            tictactoe.setComputerScore(settings.getInt(COUNTER_COMPUTER_WINS, 0));
             tictactoe.setTies(settings.getInt(COUNTER_TIES, 0));
         }
 
         // Display data
-        ((TextView) findViewById(R.id.textView1)).setText(tictactoe.getGameMode().toString());
+        String gameMode = getString(R.string.PvP);
+        if (tictactoe.getGameMode().equals(GameMode.PvE)) {
+            gameMode = getString(R.string.PvE);
+        }
+        ((TextView) findViewById(R.id.textViewVersus)).setText(gameMode);
     }
 
     @Override
@@ -95,6 +105,8 @@ public class MainActivity extends Activity {
         tictactoe.setPlayer1Turn(savedInstanceState.getBoolean(PLAYER1_TURN));
         // Set gamemode
         tictactoe.setGameMode(GameMode.fromInt(savedInstanceState.getInt(GAME_MODE)));
+        // Set end boolean
+        isEnd = savedInstanceState.getBoolean(IS_END);
 
         // Get board
         int[] board = savedInstanceState.getIntArray(GAME_BOARD);
@@ -105,13 +117,18 @@ public class MainActivity extends Activity {
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
             Drawable marker = null;
-            if (board[i] == 1) {
-                marker = getDrawable(R.drawable.x);
-                moveCounter++;
-            } else if (board[i] == 2) {
-                marker = getDrawable(R.drawable.o);
-                moveCounter++;
+            switch (board[i]) {
+                case 1:
+                    marker = getDrawable(R.drawable.x);
+                    moveCounter++;
+                    break;
+                case 2:
+                    marker = getDrawable(R.drawable.o);
+                    moveCounter++;
+                    break;
             }
+
+            // Set image
             buttons[i].setImageDrawable(marker);
         }
     }
@@ -122,6 +139,7 @@ public class MainActivity extends Activity {
         savedInstanceState.putBoolean(PLAYER1_TURN, tictactoe.getPlayer1Turn());
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
+        savedInstanceState.putBoolean(IS_END, isEnd);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -136,6 +154,7 @@ public class MainActivity extends Activity {
 
         editor.putInt(COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
         editor.putInt(COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
+        editor.putInt(COUNTER_COMPUTER_WINS, tictactoe.getComputerScore());
         editor.putInt(COUNTER_TIES, tictactoe.getTies());
 
         editor.apply();
@@ -157,18 +176,14 @@ public class MainActivity extends Activity {
      * @param v The {@code View}
      */
     public void changeGameMode(View v) {
-        // Get current gamemode
-        GameMode mode = tictactoe.getGameMode();
-        // Change it
-        if (mode.equals(GameMode.PvE)) {
-            tictactoe.setGameMode(GameMode.PvP);
-            // Update text view
-            ((TextView) findViewById(R.id.textView1)).setText(getString(R.string.PvP));
-        } else {
-            tictactoe.setGameMode(GameMode.PvE);
-            // Update text view
-            ((TextView) findViewById(R.id.textView1)).setText(getString(R.string.PvE));
+        tictactoe.changeGameMode();
+
+        String gameMode = getString(R.string.PvP);
+        if (tictactoe.getGameMode().equals(GameMode.PvE)) {
+            gameMode = getString(R.string.PvE);
         }
+        // Update text view
+        ((TextView) findViewById(R.id.textViewVersus)).setText(gameMode);
 
         // Restart the game
         restartGame(v);
@@ -181,62 +196,14 @@ public class MainActivity extends Activity {
      */
     public void click(ImageButton button) {
 
-        // FIXME on rotate
-        // Just an aesthetics thing. The buttons change height if this isn't done
+        // Just an aesthetics thing. The buttons change height otherwise
         setHeights();
 
         // Get position of button in array
         int position = getPosition(button);
 
-        // Play position if it has not yet been set
-        if (tictactoe.isPlayable(position)) {
-
-            // Add move
-            moveCounter++;
-
-            // Play position
-            tictactoe.play(position);
-
-            // Get player marker
-            Drawable marker = tictactoe.getPlayer1Turn() ? getDrawable(R.drawable.x) : getDrawable(R.drawable.o);
-            // Set marker
-            button.setImageDrawable(marker);
-
-            // Check win or change turn
-            if (tictactoe.checkWin()) {
-                int winner = tictactoe.getPlayer1Turn() ? 1 : 2;
-                displayWin(winner);
-                endGame(winner);
-            } else {
-                tictactoe.changeTurn();
-            }
-
-            // Tie game
-            if (moveCounter == 9) {
-                displayWin(0);
-                endGame(0);
-            }
-
-            // Computer turn
-            if (!tictactoe.getPlayer1Turn() && tictactoe.getGameMode().equals(GameMode.PvE)) {
-                click(computerChoice());
-            }
-        }
-    }
-
-    /**
-     * FIXME
-     */
-    private void setHeights() {
-        ImageButton[] buttons = getButtons();
-        int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
-
-        for (ImageButton button : buttons) {
-            ViewGroup.LayoutParams params = button.getLayoutParams();
-            params.height = height;
-            params.width = 0;
-            button.setLayoutParams(params);
-        }
+        // Play the position
+        play(position);
     }
 
     /**
@@ -254,6 +221,7 @@ public class MainActivity extends Activity {
         }
 
         moveCounter = 0;
+        isEnd = false;
         tictactoe.restartGame();
     }
 
@@ -274,7 +242,7 @@ public class MainActivity extends Activity {
     /**
      * Chooses a move for the computer and plays it
      */
-    private ImageButton computerChoice() {
+    private int computerChoice() {
         int[] board = tictactoe.getBoard();
         Random random = new Random();
         int choice;
@@ -283,46 +251,63 @@ public class MainActivity extends Activity {
             choice = random.nextInt(9);
         } while (!tictactoe.isPlayable(choice));
 
-        Log.i("Comp choice", choice + "");
-        // Pretend computer clicked the button
-        // Kind of counter-productive so FIXME
-        return getButtons()[choice];
+        Log.i("Computer choice", choice + "");
+        return choice;
     }
 
     /**
-     * Displays a {@code Toast} with an appropriate message
+     * Displays a {@code Toast} or alert box with an appropriate message, and updates the score
      *
-     * @param winner The winner of the game, where 0 = tie game, 1 = player 1, and 2 = player 2.
+     * @param winner The winner of the game, where 0 = tie game, 1 = player 1, 2 = player 2, and
+     *               3 = computer.
      */
     private void displayWin(int winner) {
-        String message = "";
         switch (winner) {
             case 0:
-                message = "Player 1 winner!";
+                Toast.makeText(this, getString(R.string.winTie), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                message = "Player 2 winner!";
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.winPlayer1))
+                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
                 break;
             case 2:
-                message = "Tie game!";
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.winPlayer2))
+                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
+                break;
+            case 3:
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.winComputer))
+                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
                 break;
         }
 
-        // Display toast
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Log.i("Winner", winner + "");
+        Log.i("Computer wins", tictactoe.getComputerScore() + "");
+        tictactoe.updateScore(winner);
     }
 
     /**
-     * Ends the game, and updates the score
+     * Ends the game
      */
-    private void endGame(int winner) {
+    private void endGame() {
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < buttons.length; i++) {
             // Disable buttons
             buttons[i].setEnabled(false);
         }
 
-        tictactoe.updateScore(winner);
+        isEnd = true;
     }
 
     /**
@@ -360,6 +345,58 @@ public class MainActivity extends Activity {
             }
         }
         return -1;
+    }
+
+    /**
+     * Plays the given position
+     *
+     * @param position The position to be played
+     */
+    private void play(int position) {
+        // Play position if it has not yet been set
+        if (tictactoe.isPlayable(position)) {
+
+            // Add move
+            moveCounter++;
+
+            // Play position
+            tictactoe.play(position);
+
+            // Get player markers
+            Drawable marker;
+            int player;
+            if (tictactoe.getPlayer1Turn()) {
+                player = 1;
+                marker = getDrawable(R.drawable.x);
+            } else {
+                marker = getDrawable(R.drawable.o);
+                if (tictactoe.getGameMode().equals(GameMode.PvP)) {
+                    player = 2;
+                } else {
+                    player = 3;
+                }
+            }
+
+            // Set marker
+            getButtons()[position].setImageDrawable(marker);
+
+            // Check win/tie
+            if (tictactoe.checkWin()) {
+                displayWin(player);
+                endGame();
+            } else if (moveCounter == 9) { // Tie game
+                displayWin(0);
+                endGame();
+            }
+
+            // Change turn
+            tictactoe.changeTurn();
+
+            // Computer turn
+            if (!isEnd && !tictactoe.getPlayer1Turn() && tictactoe.getGameMode().equals(GameMode.PvE)) {
+                play(computerChoice());
+            }
+        }
     }
 
     /**
@@ -422,5 +459,20 @@ public class MainActivity extends Activity {
                 click(button9);
             }
         });
+    }
+
+    /**
+     * FIXME
+     */
+    private void setHeights() {
+        ImageButton[] buttons = getButtons();
+        int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
+
+        for (ImageButton button : buttons) {
+            ViewGroup.LayoutParams params = button.getLayoutParams();
+            params.height = height;
+            params.width = 0;
+            button.setLayoutParams(params);
+        }
     }
 }

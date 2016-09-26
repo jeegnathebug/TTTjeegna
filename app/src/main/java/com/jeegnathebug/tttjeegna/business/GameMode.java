@@ -1,17 +1,16 @@
 package com.jeegnathebug.tttjeegna.business;
 
+import com.jeegnathebug.tttjeegna.R;
+
 /**
  * Created by jeegna on 19/09/16.
  */
 public enum GameMode {
-    PvP("Player vs. Player", 0),
-    PvE("Player vs. Droid", 1);
+    PvP(0), PvE(1);
 
-    private String text;
     private int value;
 
-    private GameMode(String text, int value) {
-        this.text = text;
+    private GameMode(int value) {
         this.value = value;
     }
 
@@ -27,14 +26,5 @@ public enum GameMode {
 
     public int getValue() {
         return value;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public String toString() {
-        return text;
     }
 }
