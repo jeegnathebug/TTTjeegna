@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">TTTjeegna</string>
+    <string name="app_name">TTTjeegna</string>
     <string name="button_restart">Restart</string>
     <string name="button_versus">Change Game Mode</string>
     <string name="button_reset_scores">Reset Score</string>
@@ -8,7 +8,7 @@
     <string name="PvE">Player vs. Droid</string>
 
     <string name="action_about">About</string>
-    <string name="about_text">Win the game by getting three of your markers (either x or o) in a row. The markers can be horizontal, vertical or diagonal.</string>
+    <string name="about_text">Tictactoe is a two player game in which each player will alternatingly play their marker, either x or o, on the 3x3 grid. You win the game by getting three of your markers in a row. The markers can be horizontal, vertical or diagonal.</string>
 
     <string name="score_title">Scores</string>
     <string name="score_player1">Player 1: %1$d</string>
@@ -22,4 +22,6 @@
     <string name="message_tie">Tie game!</string>
 
     <string name="button_OK">OK</string>
+
+    <string name="author">Written by: Jeegna Patel</string>
 </resources>

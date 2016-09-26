@@ -135,7 +135,6 @@ public class MainActivity extends Activity {
 
             // Set image
             buttons[i].setImageDrawable(marker);
-
         }
     }
 

@@ -22,7 +22,17 @@
         android:text="@string/about_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textSize="16sp"
         android:padding="5dp"
-        android:id="@+id/textViewAboutText" />
+        android:id="@+id/textViewAboutText1" />
+
+    <TextView
+        android:textAlignment="textEnd"
+        android:text="@string/author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="5dp"
+        android:id="@+id/textViewAboutText2" />
 </LinearLayout>
