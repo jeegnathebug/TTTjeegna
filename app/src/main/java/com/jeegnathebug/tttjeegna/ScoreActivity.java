@@ -2,8 +2,8 @@ package com.jeegnathebug.tttjeegna;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,16 +36,16 @@ public class ScoreActivity extends Activity {
         }
 
         // Update view
-        String text = String.format(getString(R.string.scorePlayer1), player1);
+        String text = String.format(getString(R.string.score_player1), player1);
         ((TextView) findViewById(R.id.textViewScorePlayer1)).setText(text);
 
-        text = String.format(getString(R.string.scorePlayer2), player2);
+        text = String.format(getString(R.string.score_player2), player2);
         ((TextView) findViewById(R.id.textViewScorePlayer2)).setText(text);
 
-        text = String.format(getString(R.string.scoreComputer), computer);
+        text = String.format(getString(R.string.score_computer), computer);
         ((TextView) findViewById(R.id.textViewScoreComputer)).setText(text);
 
-        text = String.format(getString(R.string.scoreTies), ties);
+        text = String.format(getString(R.string.score_ties), ties);
         ((TextView) findViewById(R.id.textViewScoreTies)).setText(text);
     }
 
@@ -60,6 +60,22 @@ public class ScoreActivity extends Activity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Set shared preferences
+        SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putInt(MainActivity.COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
+        editor.putInt(MainActivity.COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
+        editor.putInt(MainActivity.COUNTER_COMPUTER_WINS, tictactoe.getComputerScore());
+        editor.putInt(MainActivity.COUNTER_TIES, tictactoe.getTies());
+
+        editor.apply();
+    }
+
     /**
      * Resets the scores
      *
@@ -70,16 +86,16 @@ public class ScoreActivity extends Activity {
         tictactoe.resetScores();
 
         // Update view
-        String text = String.format(getString(R.string.scorePlayer1), 0);
+        String text = String.format(getString(R.string.score_player1), 0);
         ((TextView) findViewById(R.id.textViewScorePlayer1)).setText(text);
 
-        text = String.format(getString(R.string.scorePlayer2), 0);
+        text = String.format(getString(R.string.score_player2), 0);
         ((TextView) findViewById(R.id.textViewScorePlayer2)).setText(text);
 
-        text = String.format(getString(R.string.scoreComputer), 0);
+        text = String.format(getString(R.string.score_computer), 0);
         ((TextView) findViewById(R.id.textViewScoreComputer)).setText(text);
 
-        text = String.format(getString(R.string.scoreTies), 0);
+        text = String.format(getString(R.string.score_ties), 0);
         ((TextView) findViewById(R.id.textViewScoreTies)).setText(text);
     }
 }

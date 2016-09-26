@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,11 +31,12 @@ public class MainActivity extends Activity {
 
     private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
 
-    static final String PREFS_NAME = "Preferences";
+    public static final String PREFS_NAME = "Preferences";
 
     private static final String PLAYER1_TURN = "player1Turn";
     private static final String GAME_MODE = "gameMode";
     private static final String GAME_BOARD = "gameBoard";
+    private static final String PLAYER1_START = "playerTurn";
     private static final String IS_END = "isEnd";
 
     public static final String TIC_TAC_TOE = "tictactoe";
@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
     public static final String COUNTER_TIES = "counterTies";
 
     private int moveCounter = 0;
+    private boolean player1Start = true;
     private boolean isEnd = false;
 
     @Override
@@ -105,6 +106,8 @@ public class MainActivity extends Activity {
         tictactoe.setPlayer1Turn(savedInstanceState.getBoolean(PLAYER1_TURN));
         // Set gamemode
         tictactoe.setGameMode(GameMode.fromInt(savedInstanceState.getInt(GAME_MODE)));
+        // Set round robin counter
+        player1Start = savedInstanceState.getBoolean(PLAYER1_START);
         // Set end boolean
         isEnd = savedInstanceState.getBoolean(IS_END);
 
@@ -139,6 +142,7 @@ public class MainActivity extends Activity {
         savedInstanceState.putBoolean(PLAYER1_TURN, tictactoe.getPlayer1Turn());
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
+        savedInstanceState.putBoolean(PLAYER1_START, player1Start);
         savedInstanceState.putBoolean(IS_END, isEnd);
 
         super.onSaveInstanceState(savedInstanceState);
@@ -223,6 +227,14 @@ public class MainActivity extends Activity {
         moveCounter = 0;
         isEnd = false;
         tictactoe.restartGame();
+
+        // If player 1 is not starting, change who starts
+        if (tictactoe.getGameMode().equals(GameMode.PvP)) {
+            player1Start = !player1Start;
+            if (!player1Start) {
+                tictactoe.changeTurn();
+            }
+        }
     }
 
     /**
@@ -251,7 +263,6 @@ public class MainActivity extends Activity {
             choice = random.nextInt(9);
         } while (!tictactoe.isPlayable(choice));
 
-        Log.i("Computer choice", choice + "");
         return choice;
     }
 
@@ -264,11 +275,11 @@ public class MainActivity extends Activity {
     private void displayWin(int winner) {
         switch (winner) {
             case 0:
-                Toast.makeText(this, getString(R.string.winTie), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.message_tie), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.winPlayer1))
+                        .setMessage(getString(R.string.message_player1))
                         .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
@@ -276,7 +287,7 @@ public class MainActivity extends Activity {
                 break;
             case 2:
                 new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.winPlayer2))
+                        .setMessage(getString(R.string.message_player2))
                         .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
@@ -284,7 +295,7 @@ public class MainActivity extends Activity {
                 break;
             case 3:
                 new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.winComputer))
+                        .setMessage(getString(R.string.message_computer))
                         .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
@@ -292,8 +303,6 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        Log.i("Winner", winner + "");
-        Log.i("Computer wins", tictactoe.getComputerScore() + "");
         tictactoe.updateScore(winner);
     }
 
@@ -377,8 +386,12 @@ public class MainActivity extends Activity {
                 }
             }
 
+            // Get button
+            ImageButton button = getButtons()[position];
             // Set marker
-            getButtons()[position].setImageDrawable(marker);
+            button.setImageDrawable(marker);
+            // Disable button
+            button.setEnabled(false);
 
             // Check win/tie
             if (tictactoe.checkWin()) {
@@ -462,7 +475,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * FIXME
+     * Sets th height of all buttons to one third of the TableLayout
      */
     private void setHeights() {
         ImageButton[] buttons = getButtons();

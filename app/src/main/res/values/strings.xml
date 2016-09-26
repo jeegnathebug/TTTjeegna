@@ -1,27 +1,25 @@
 <resources>
-    <string name="app_name">TTTjeegna</string>
+    <string name="app_name" translatable="false">TTTjeegna</string>
     <string name="button_restart">Restart</string>
     <string name="button_versus">Change Game Mode</string>
     <string name="button_reset_scores">Reset Score</string>
-    <string name="button_scores">Scores</string>
-    <string name="button_about">About</string>
 
     <string name="PvP">Player vs. Player</string>
     <string name="PvE">Player vs. Droid</string>
 
     <string name="action_about">About</string>
-    <string name="aboutText">Win the game by getting three of your markers (either x or o) in a row. The markers can be horizontal, vertical or diagonal.</string>
+    <string name="about_text">Win the game by getting three of your markers (either x or o) in a row. The markers can be horizontal, vertical or diagonal.</string>
 
-    <string name="scoreTitle">Scores</string>
-    <string name="scorePlayer1">Player 1: %1$d</string>
-    <string name="scorePlayer2">Player 2: %1$d</string>
-    <string name="scoreComputer">Computer: %1$d</string>
-    <string name="scoreTies">Ties: %1$d</string>
+    <string name="score_title">Scores</string>
+    <string name="score_player1">Player 1: %1$d</string>
+    <string name="score_player2">Player 2: %1$d</string>
+    <string name="score_computer">Computer: %1$d</string>
+    <string name="score_ties">Ties: %1$d</string>
 
-    <string name="winPlayer1">Player 1 wins!</string>
-    <string name="winPlayer2">Player 2 wins!</string>
-    <string name="winComputer">Computer wins</string>
-    <string name="winTie">Tie game!</string>
+    <string name="message_player1">Player 1 wins!</string>
+    <string name="message_player2">Player 2 wins!</string>
+    <string name="message_computer">Computer wins!</string>
+    <string name="message_tie">Tie game!</string>
 
     <string name="button_OK">OK</string>
 </resources>
