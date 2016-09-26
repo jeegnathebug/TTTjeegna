@@ -29,7 +29,7 @@ import java.util.Random;
  */
 public class MainActivity extends Activity {
 
-    private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
+    private TicTacToe tictactoe;
 
     public static final String PREFS_NAME = "com.jeegnathebug.tttjeegna.Preferences";
 
@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
     private static final String GAME_MODE = "com.jeegnathebug.tttjeegna.gameMode";
     private static final String GAME_BOARD = "com.jeegnathebug.tttjeegna.gameBoard";
     private static final String PLAYER1_START = "com.jeegnathebug.tttjeegna.playerTurn";
+    private static final String MOVE_COUNTER = "com.jeegnathebug.ttjeegna.moveCounter";
     private static final String IS_END = "com.jeegnathebug.tttjeegna.isEnd";
 
     public static final String TIC_TAC_TOE = "com.jeegnathebug.tttjeegna.tictactoe";
@@ -55,6 +56,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setActionBar(toolbar);
+
+        // Default game
+        tictactoe = new TicTacToe(GameMode.PvE);
 
         // Set button events
         setButtons();
@@ -108,6 +112,8 @@ public class MainActivity extends Activity {
         tictactoe.setPlayer1Turn(savedInstanceState.getBoolean(PLAYER1_TURN));
         // Set gamemode
         tictactoe.setGameMode(GameMode.fromInt(savedInstanceState.getInt(GAME_MODE)));
+        // Set move counter
+        moveCounter = savedInstanceState.getInt(MOVE_COUNTER);
         // Set round robin counter
         player1Start = savedInstanceState.getBoolean(PLAYER1_START);
         // Set end boolean
@@ -121,20 +127,23 @@ public class MainActivity extends Activity {
         // Set markers on board
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
-            Drawable marker = null;
+            Drawable marker = null; // getDrawable(R.drawable.blank)
             switch (board[i]) {
                 case 1:
                     marker = getDrawable(R.drawable.x);
-                    moveCounter++;
                     break;
                 case 2:
                     marker = getDrawable(R.drawable.o);
-                    moveCounter++;
                     break;
             }
 
             // Set image
             buttons[i].setImageDrawable(marker);
+
+            // If game hsa ended, disable buttons
+            if (isEnd) {
+                buttons[i].setEnabled(false);
+            }
         }
     }
 
@@ -144,6 +153,7 @@ public class MainActivity extends Activity {
         savedInstanceState.putBoolean(PLAYER1_TURN, tictactoe.getPlayer1Turn());
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
+        savedInstanceState.putInt(MOVE_COUNTER, moveCounter);
         savedInstanceState.putBoolean(PLAYER1_START, player1Start);
         savedInstanceState.putBoolean(IS_END, isEnd);
 
@@ -201,10 +211,6 @@ public class MainActivity extends Activity {
      * @param button The {@code Button} that was clicked
      */
     public void click(ImageButton button) {
-
-        // Just an aesthetics thing. The buttons change height otherwise
-        setHeights();
-
         // Get position of button in array
         int position = getPosition(button);
 
@@ -223,7 +229,7 @@ public class MainActivity extends Activity {
             // Enable buttons
             button.setEnabled(true);
             // Reset button images
-            button.setImageDrawable(null);
+            button.setImageDrawable(null); // getDrawable(R.drawable.blank)
         }
 
         moveCounter = 0;
@@ -373,6 +379,9 @@ public class MainActivity extends Activity {
      * @param position The position to be played
      */
     private void play(int position) {
+        // Just for aesthetics
+        setHeights();
+
         // Play position if it has not yet been set
         if (tictactoe.isPlayable(position)) {
 
