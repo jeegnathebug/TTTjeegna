@@ -31,19 +31,19 @@ public class MainActivity extends Activity {
 
     private TicTacToe tictactoe = new TicTacToe(GameMode.PvE);
 
-    public static final String PREFS_NAME = "Preferences";
+    public static final String PREFS_NAME = "com.jeegnathebug.tttjeegna.Preferences";
 
-    private static final String PLAYER1_TURN = "player1Turn";
-    private static final String GAME_MODE = "gameMode";
-    private static final String GAME_BOARD = "gameBoard";
-    private static final String PLAYER1_START = "playerTurn";
-    private static final String IS_END = "isEnd";
+    private static final String PLAYER1_TURN = "com.jeegnathebug.tttjeegna.player1Turn";
+    private static final String GAME_MODE = "com.jeegnathebug.tttjeegna.gameMode";
+    private static final String GAME_BOARD = "com.jeegnathebug.tttjeegna.gameBoard";
+    private static final String PLAYER1_START = "com.jeegnathebug.tttjeegna.playerTurn";
+    private static final String IS_END = "com.jeegnathebug.tttjeegna.isEnd";
 
-    public static final String TIC_TAC_TOE = "tictactoe";
-    public static final String COUNTER_PLAYER1_WINS = "counterPlayer1Wins";
-    public static final String COUNTER_PLAYER2_WINS = "counterPlayer2Wins";
-    public static final String COUNTER_COMPUTER_WINS = "counterComputerWins";
-    public static final String COUNTER_TIES = "counterTies";
+    public static final String TIC_TAC_TOE = "com.jeegnathebug.tttjeegna.tictactoe";
+    public static final String COUNTER_PLAYER1_WINS = "com.jeegnathebug.tttjeegna.counterPlayer1Wins";
+    public static final String COUNTER_PLAYER2_WINS = "com.jeegnathebug.tttjeegna.counterPlayer2Wins";
+    public static final String COUNTER_COMPUTER_WINS = "com.jeegnathebug.tttjeegna.counterComputerWins";
+    public static final String COUNTER_TIES = "com.jeegnathebug.tttjeegna.counterTies";
 
     private int moveCounter = 0;
     private boolean player1Start = true;
@@ -220,11 +220,11 @@ public class MainActivity extends Activity {
      */
     public void restartGame(View v) {
         ImageButton[] buttons = getButtons();
-        for (int i = 0; i < buttons.length; i++) {
+        for (ImageButton button : buttons) {
             // Enable buttons
-            buttons[i].setEnabled(true);
+            button.setEnabled(true);
             // Reset button images
-            buttons[i].setImageDrawable(null);
+            button.setImageDrawable(null);
         }
 
         moveCounter = 0;
@@ -323,9 +323,9 @@ public class MainActivity extends Activity {
      */
     private void endGame() {
         ImageButton[] buttons = getButtons();
-        for (int i = 0; i < buttons.length; i++) {
+        for (ImageButton button : buttons) {
             // Disable buttons
-            buttons[i].setEnabled(false);
+            button.setEnabled(false);
         }
 
         isEnd = true;
@@ -491,7 +491,7 @@ public class MainActivity extends Activity {
      */
     private void setHeights() {
         ImageButton[] buttons = getButtons();
-        int height = (((TableLayout) findViewById(R.id.tableLayout)).getHeight()) / 3;
+        int height = (findViewById(R.id.tableLayout).getHeight()) / 3;
 
         for (ImageButton button : buttons) {
             ViewGroup.LayoutParams params = button.getLayoutParams();

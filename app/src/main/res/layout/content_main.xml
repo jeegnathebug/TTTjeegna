@@ -11,8 +11,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.jeegnathebug.tttjeegna.MainActivity"
+    android:orientation="vertical"
     tools:showIn="@layout/activity_main"
-    android:orientation="vertical">
+    android:id="@+id/main_content">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -134,8 +135,7 @@
             android:onClick="restartGame"/>
 
         <Button
-            android:layout_width="0dp"
-            android:layout_weight="33"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/button_versus"
             android:id="@+id/buttonVersus"
