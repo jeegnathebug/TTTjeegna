@@ -1,7 +1,5 @@
 package com.jeegnathebug.tttjeegna.business;
 
-import com.jeegnathebug.tttjeegna.R;
-
 /**
  * Created by jeegna on 19/09/16.
  */
@@ -10,7 +8,7 @@ public enum GameMode {
 
     private int value;
 
-    private GameMode(int value) {
+    GameMode(int value) {
         this.value = value;
     }
 

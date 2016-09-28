@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -362,7 +361,7 @@ public class MainActivity extends Activity {
      * Gets the position of the given Button
      *
      * @param button The button whose position is to be found
-     * @return The position of the given button
+     * @return The position of the given button, -1 if the button is not found
      */
     private int getPosition(ImageButton button) {
         ImageButton[] buttons = getButtons();
@@ -371,6 +370,7 @@ public class MainActivity extends Activity {
                 return i;
             }
         }
+        // Shouldn't happen unless you've created a new Button and search for that
         return -1;
     }
 
@@ -380,9 +380,6 @@ public class MainActivity extends Activity {
      * @param position The position to be played
      */
     private void play(int position) {
-        // Just for aesthetics
-        setHeights();
-
         // Play position if it has not yet been set
         if (tictactoe.isPlayable(position)) {
 
@@ -493,20 +490,5 @@ public class MainActivity extends Activity {
                 click(button9);
             }
         });
-    }
-
-    /**
-     * Sets th height of all buttons to one third of the TableLayout
-     */
-    private void setHeights() {
-        ImageButton[] buttons = getButtons();
-        int height = (findViewById(R.id.tableLayout).getHeight()) / 3;
-
-        for (ImageButton button : buttons) {
-            ViewGroup.LayoutParams params = button.getLayoutParams();
-            params.height = height;
-            params.width = 0;
-            button.setLayoutParams(params);
-        }
     }
 }
