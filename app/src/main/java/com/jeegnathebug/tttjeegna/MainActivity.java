@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
     public static final String COUNTER_TIES = "com.jeegnathebug.tttjeegna.counterTies";
 
     private int moveCounter = 0;
-    private boolean player1Start = true;
+    private boolean isPlayer1Start = true;
     private boolean isEnd = false;
 
     @Override
@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
         // Set move counter
         moveCounter = savedInstanceState.getInt(MOVE_COUNTER);
         // Set round robin counter
-        player1Start = savedInstanceState.getBoolean(PLAYER1_START);
+        isPlayer1Start = savedInstanceState.getBoolean(PLAYER1_START);
         // Set end boolean
         isEnd = savedInstanceState.getBoolean(IS_END);
         // Set scores
@@ -162,8 +162,8 @@ public class MainActivity extends Activity {
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
         // Moves played
         savedInstanceState.putInt(MOVE_COUNTER, moveCounter);
-        // Player 1 start
-        savedInstanceState.putBoolean(PLAYER1_START, player1Start);
+        // Round robin counter
+        savedInstanceState.putBoolean(PLAYER1_START, isPlayer1Start);
         // End of game
         savedInstanceState.putBoolean(IS_END, isEnd);
         // Scores
@@ -253,10 +253,15 @@ public class MainActivity extends Activity {
 
         // If player 1 is not starting, change who starts
         if (tictactoe.getGameMode().equals(GameMode.PvP)) {
-            player1Start = !player1Start;
-            if (!player1Start) {
+            // Change start turn
+            if (isPlayer1Start) {
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getString(R.string.player1Start));
+            } else {
                 tictactoe.changeTurn();
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getString(R.string.player2Start));
             }
+
+            isPlayer1Start = !isPlayer1Start;
         }
     }
 
@@ -435,11 +440,27 @@ public class MainActivity extends Activity {
             }
 
             // Change turn
-            tictactoe.changeTurn();
+            changeTurn();
 
             // Computer turn
             if (!isEnd && !tictactoe.getPlayer1Turn() && tictactoe.getGameMode().equals(GameMode.PvE)) {
                 play(computerChoice());
+            }
+        }
+    }
+
+    /**
+     * Changes the turn and sets the player turn text if necessary
+     */
+    private void changeTurn() {
+        // Change turn
+        tictactoe.changeTurn();
+        // Update text
+        if (tictactoe.getGameMode().equals(GameMode.PvP)) {
+            if (tictactoe.getPlayer1Turn()) {
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getString(R.string.player1Start));
+            } else {
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getString(R.string.player2Start));
             }
         }
     }
