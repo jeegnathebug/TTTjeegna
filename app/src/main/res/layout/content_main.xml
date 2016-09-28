@@ -33,6 +33,7 @@
                 android:layout_column="0"
                 android:scaleType="centerInside"
                 android:adjustViewBounds="true"
+                android:src="@drawable/blank"
                 />
 
             <ImageButton
@@ -42,7 +43,8 @@
                 android:id="@+id/imageButton2"
                 android:layout_column="1"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -51,7 +53,8 @@
                 android:id="@+id/imageButton3"
                 android:layout_column="2"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
         </TableRow>
 
         <TableRow
@@ -66,7 +69,8 @@
                 android:id="@+id/imageButton4"
                 android:layout_column="0"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -75,7 +79,8 @@
                 android:id="@+id/imageButton5"
                 android:layout_column="1"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -84,7 +89,8 @@
                 android:id="@+id/imageButton6"
                 android:layout_column="2"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
         </TableRow>
 
         <TableRow
@@ -99,7 +105,8 @@
                 android:id="@+id/imageButton7"
                 android:layout_column="0"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -108,7 +115,8 @@
                 android:id="@+id/imageButton8"
                 android:layout_column="1"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -117,7 +125,8 @@
                 android:id="@+id/imageButton9"
                 android:layout_column="2"
                 android:scaleType="centerInside"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/blank" />
         </TableRow>
     </TableLayout>
 
@@ -130,6 +139,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/button_restart"
             android:id="@+id/buttonRestart"
             android:onClick="restartGame"/>
@@ -137,6 +147,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="2"
             android:text="@string/button_versus"
             android:id="@+id/buttonVersus"
             android:onClick="changeGameMode" />
@@ -144,6 +155,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/score_title"
             android:id="@+id/buttonScores"
             android:onClick="scores" />

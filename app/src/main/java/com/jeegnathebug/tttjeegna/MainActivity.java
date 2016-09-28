@@ -127,18 +127,19 @@ public class MainActivity extends Activity {
         // Set markers on board
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
-            Drawable marker = null; // getDrawable(R.drawable.blank)
+            Drawable marker;// = getDrawable(R.drawable.blank);
             switch (board[i]) {
                 case 1:
                     marker = getDrawable(R.drawable.x);
+                    // Set image
+                    buttons[i].setImageDrawable(marker);
                     break;
                 case 2:
                     marker = getDrawable(R.drawable.o);
+                    // Set image
+                    buttons[i].setImageDrawable(marker);
                     break;
             }
-
-            // Set image
-            buttons[i].setImageDrawable(marker);
 
             // If game hsa ended, disable buttons
             if (isEnd) {
@@ -229,7 +230,7 @@ public class MainActivity extends Activity {
             // Enable buttons
             button.setEnabled(true);
             // Reset button images
-            button.setImageDrawable(null); // getDrawable(R.drawable.blank)
+            button.setImageDrawable(getDrawable(R.drawable.blank));
         }
 
         moveCounter = 0;

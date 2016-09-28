@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TTTjeegna</string>
     <string name="button_restart">Restart</string>
-    <string name="button_versus">Change Game Mode</string>
+    <string name="button_versus">Change Mode</string>
     <string name="button_reset_scores">Reset Score</string>
 
     <string name="PvP">Player vs. Player</string>

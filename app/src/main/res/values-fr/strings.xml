@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">TTTjeegna</string>
     <string name="button_restart">Recommencer</string>
-    <string name="button_versus">Changer le mode de jeu</string>
+    <string name="button_versus">Changer le mode</string>
     <string name="button_reset_scores">Réinitialiser les scores</string>
 
     <string name="PvP">Joueur contre joueur</string>
