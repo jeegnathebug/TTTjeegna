@@ -24,7 +24,7 @@ import com.jeegnathebug.tttjeegna.business.TicTacToe;
 import java.util.Random;
 
 /**
- * The main class
+ * The controller class for the main screen
  */
 public class MainActivity extends Activity {
 
@@ -117,6 +117,11 @@ public class MainActivity extends Activity {
         player1Start = savedInstanceState.getBoolean(PLAYER1_START);
         // Set end boolean
         isEnd = savedInstanceState.getBoolean(IS_END);
+        // Set scores
+        tictactoe.setPlayer1Score(savedInstanceState.getInt(COUNTER_PLAYER1_WINS));
+        tictactoe.setPlayer2Score(savedInstanceState.getInt(COUNTER_PLAYER2_WINS));
+        tictactoe.setComputerScore(savedInstanceState.getInt(COUNTER_COMPUTER_WINS));
+        tictactoe.setTies(savedInstanceState.getInt(COUNTER_TIES));
 
         // Get board
         int[] board = savedInstanceState.getIntArray(GAME_BOARD);
@@ -126,7 +131,7 @@ public class MainActivity extends Activity {
         // Set markers on board
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
-            Drawable marker;// = getDrawable(R.drawable.blank);
+            Drawable marker;
             switch (board[i]) {
                 case 1:
                     marker = getDrawable(R.drawable.x);
@@ -149,13 +154,23 @@ public class MainActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save state information
+        // Player 1 turn
         savedInstanceState.putBoolean(PLAYER1_TURN, tictactoe.getPlayer1Turn());
+        // Game mode
         savedInstanceState.putInt(GAME_MODE, tictactoe.getGameMode().getValue());
+        // Game board
         savedInstanceState.putIntArray(GAME_BOARD, tictactoe.getBoard());
+        // Moves played
         savedInstanceState.putInt(MOVE_COUNTER, moveCounter);
+        // Player 1 start
         savedInstanceState.putBoolean(PLAYER1_START, player1Start);
+        // End of game
         savedInstanceState.putBoolean(IS_END, isEnd);
+        // Scores
+        savedInstanceState.putInt(COUNTER_PLAYER1_WINS, tictactoe.getPlayer1Score());
+        savedInstanceState.putInt(COUNTER_PLAYER2_WINS, tictactoe.getPlayer2Score());
+        savedInstanceState.putInt(COUNTER_COMPUTER_WINS, tictactoe.getComputerScore());
+        savedInstanceState.putInt(COUNTER_TIES, tictactoe.getTies());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -272,7 +287,6 @@ public class MainActivity extends Activity {
      * Chooses a move for the computer and plays it
      */
     private int computerChoice() {
-        int[] board = tictactoe.getBoard();
         Random random = new Random();
         int choice;
 
