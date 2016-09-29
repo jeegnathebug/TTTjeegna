@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TTTjeegna</string>
+
+    <!-- Button options -->
     <string name="button_restart">Recommencer</string>
     <string name="button_versus">Changer le mode</string>
     <string name="button_reset_scores">Réinitialiser les scores</string>
 
+    <!-- Game mode -->
     <string name="PvP">Joueur contre joueur</string>
     <string name="PvE">Joueur contre ordinateur</string>
 
+    <!-- Starting player -->
+    <string name="player1Start">Joueur 1</string>
+    <string name="player2Start">Joueur 2</string>
+
+    <!-- About screen -->
     <string name="action_about">Info</string>
     <string name="about_text">Tictactoe est un jeu à deux joueurs dans lequel ils vont jouer leurs marqueurs, soit x ou o, sur la grille. Vous gagnez le jeu en obtenant trois de vos marqueurs dans une rangée. Les marqueurs peuvent être horizontale, verticale ou diagonale.</string>
+    <string name="author">Écrit par Jeegna Patel</string>
 
+    <!-- Score screen -->
+    <string name="score_title">Scores</string>
     <string name="score_player1">Joueur 1: %1$d</string>
     <string name="score_player2">Joueur 2: %1$d</string>
     <string name="score_computer">Ordinateur: %1$d</string>
     <string name="score_ties">Match nul: %1$d</string>
-    <string name="score_title">Score</string>
 
-    <string name="message_player1">Joueur 1 gagne!</string>
-    <string name="message_player2">Joueur 2 gagne!</string>
+    <!-- Game over messages-->
+    <string name="message_player1">Tu as gagné! Cliquez sur réinitialiserpour recommencer</string>
+    <string name="message_player2">Joueur 2 gagne! Cliquez sur réinitialiserpour recommencer</string>
     <string name="message_computer">L\'ordinateur gagne!</string>
-    <string name="message_tie">C\'est un match nul!</string>
-
-    <string name="button_OK">OK</string>
-
-    <string name="author">Écrit par Jeegna Patel</string>
+    <string name="message_tie">C\'est un match nul! Recommencer pour jouer encore une fois</string>
+    <string name="button_positive">Réinitialiser</string>
+    <string name="button_negative">Annuler</string>
 </resources>

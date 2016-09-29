@@ -128,6 +128,15 @@ public class MainActivity extends Activity {
         // Set board
         tictactoe.setBoard(board);
 
+        // Set text
+        if (tictactoe.getGameMode().equals(GameMode.PvP)) {
+            if (tictactoe.getPlayer1Turn()) {
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getText(R.string.player1Start));
+            } else {
+                ((TextView) findViewById(R.id.textViewPlayerTurn)).setText(getText(R.string.player2Start));
+            }
+        }
+
         // Set markers on board
         ImageButton[] buttons = getButtons();
         for (int i = 0; i < board.length; i++) {
@@ -212,9 +221,13 @@ public class MainActivity extends Activity {
         String gameMode = getString(R.string.PvP);
         if (tictactoe.getGameMode().equals(GameMode.PvE)) {
             gameMode = getString(R.string.PvE);
+
+            // Reset player turn marker
+            ((TextView) findViewById(R.id.textViewPlayerTurn)).setText("");
         }
         // Update text view
         ((TextView) findViewById(R.id.textViewVersus)).setText(gameMode);
+
 
         // Restart the game
         restartGame(v);
@@ -316,7 +329,12 @@ public class MainActivity extends Activity {
             case 1:
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.message_player1))
-                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                restartGame(null);
+                            }
+                        })
+                        .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).show();
@@ -324,7 +342,12 @@ public class MainActivity extends Activity {
             case 2:
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.message_player2))
-                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                restartGame(null);
+                            }
+                        })
+                        .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).show();
@@ -332,7 +355,12 @@ public class MainActivity extends Activity {
             case 3:
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.message_computer))
-                        .setNegativeButton(R.string.button_OK, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                restartGame(null);
+                            }
+                        })
+                        .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).show();

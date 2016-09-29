@@ -21,11 +21,17 @@
     <TextView
         android:text="@string/about_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:textSize="16sp"
         android:padding="5dp"
         android:id="@+id/textViewAboutText1" />
+
+    <ImageView
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:src="@drawable/my_avatar"
+        android:id="@+id/imageViewAuthor" />
 
     <TextView
         android:textAlignment="textEnd"

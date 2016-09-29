@@ -1,27 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TTTjeegna</string>
+
+    <!-- Button options -->
     <string name="button_restart">Restart</string>
     <string name="button_versus">Change Mode</string>
     <string name="button_reset_scores">Reset Scores</string>
 
+    <!-- Game mode -->
     <string name="PvP">Player vs. Player</string>
     <string name="PvE">Player vs. Droid</string>
 
+    <!-- Starting player -->
+    <string name="player1Start">Player 1</string>
+    <string name="player2Start">Player 2</string>
+
+    <!-- About screen -->
     <string name="action_about">About</string>
     <string name="about_text">Tictactoe is a two player game in which each player will alternatingly play their marker, either x or o, on the 3x3 grid. You win the game by getting three of your markers in a row. The markers can be horizontal, vertical or diagonal.</string>
+    <string name="author">Written by: Jeegna Patel</string>
 
+    <!-- Score screen -->
     <string name="score_title">Scores</string>
     <string name="score_player1">Player 1: %1$d</string>
     <string name="score_player2">Player 2: %1$d</string>
     <string name="score_computer">Computer: %1$d</string>
     <string name="score_ties">Ties: %1$d</string>
 
-    <string name="message_player1">Player 1 wins!</string>
-    <string name="message_player2">Player 2 wins!</string>
+    <!-- Game over messages -->
+    <string name="message_player1">You win! Click on Reset to play again</string>
+    <string name="message_player2">Player 2 wins! Click on Reset to play again</string>
     <string name="message_computer">Computer wins!</string>
-    <string name="message_tie">Tie game!</string>
-
-    <string name="button_OK">OK</string>
-
-    <string name="author">Written by: Jeegna Patel</string>
+    <string name="message_tie">Tie game! Restart to play again</string>
+    <string name="button_positive">Reset</string>
+    <string name="button_negative">Cancel</string>
 </resources>

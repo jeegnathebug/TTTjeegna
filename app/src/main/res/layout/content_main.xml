@@ -35,7 +35,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -47,7 +48,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -59,7 +61,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
         </TableRow>
 
         <TableRow
@@ -77,7 +80,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -89,7 +93,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -101,7 +106,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
         </TableRow>
 
         <TableRow
@@ -119,7 +125,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -131,7 +138,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -143,7 +151,8 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/blank"
                 android:padding="0dp"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:background="@drawable/blank" />
         </TableRow>
     </TableLayout>
 
@@ -158,24 +167,21 @@
             android:layout_height="match_parent"
             android:text="@string/button_restart"
             android:id="@+id/buttonRestart"
-            android:onClick="restartGame"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:onClick="restartGame" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/button_versus"
             android:id="@+id/buttonVersus"
-            android:onClick="changeGameMode"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:onClick="changeGameMode" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/score_title"
             android:id="@+id/buttonScores"
-            android:onClick="scores"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:onClick="scores" />
     </LinearLayout>
 
     <TextView

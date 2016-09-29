@@ -27,6 +27,12 @@
         android:padding="5dp"
         android:id="@+id/textViewAboutText1" />
 
+    <ImageView
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:src="@drawable/my_avatar"
+        android:id="@+id/imageViewAuthor" />
+
     <TextView
         android:textAlignment="textEnd"
         android:text="@string/author"
